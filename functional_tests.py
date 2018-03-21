@@ -10,12 +10,13 @@ class NewVisitorTest(unittest.TestCase):
   def tearDown(self):
     self.browser.quit()
 
+
   def test_starts_game_and_retrieves_later(self):
     # Ana quiere entrar a la página del squash. 
     self.browser.get("http://localhost:8000")
 
     # Ana verifica que el título diga juegos. 
-    self.assertIn("Games", self.browser.title)
+    self.assertIn("Games played", self.browser.title)
     self.fail("Finish the test!")
 
   # Ana ingresa su primer juego contra Pablo. Pierde 6-11
