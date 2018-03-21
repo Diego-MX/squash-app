@@ -5,3 +5,4 @@ tmux*
 
 __pycache__
 *.pycache
+.vscode
