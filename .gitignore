@@ -1,0 +1,7 @@
+db.sqlite3
+geckodriver.log
+virtualenv
+tmux*
+
+__pycache__
+*.pycache
