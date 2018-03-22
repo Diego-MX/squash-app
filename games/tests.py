@@ -40,26 +40,28 @@ class GameModelTest(TestCase):
 
   def test_saving_retrieving_games(self):
     first_game = Game()
-    first_game.player1 = "a_player"
-    first_game.player2 = "other_player"
-    first_game.score1  = 3
-    first_game.score2  = 1
+    first_game.text = "a_score : a_player"
+    # first_game.player1 = "a_player"
+    # first_game.player2 = "other_player"
+    # first_game.score1  = 3
+    # first_game.score2  = 1
     first_game.save()
 
-    first_game = Game()
-    first_game.player1 = "a_player"
-    first_game.player2 = "yet_another_player"
-    first_game.score1  = 2
-    first_game.score2  = 3
-    first_game.save()
+    second_game = Game()
+    second_game.text = "b_score : b_player"
+    # first_game.player1 = "a_player"
+    # first_game.player2 = "yet_another_player"
+    # first_game.score1  = 2
+    # first_game.score2  = 3
+    second_game.save()
 
     saved_games = Game.objects.all()
     self.assertEqual(saved_games.count(), 2)
 
     first_saved_game  = saved_games[0]
     second_saved_game = saved_games[1]
-    self.assertEqual(first_saved_game.player2, "other_player")
-    self.assertEqual(second_saved_game.player2, "yet_another_player")
+    self.assertEqual(first_saved_game.text, "a_score : a_player")
+    self.assertEqual(second_saved_game.text, "b_score : b_player")
 
 
     
