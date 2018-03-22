@@ -12,6 +12,12 @@ class NewVisitorTest(unittest.TestCase):
   def tearDown(self):
     self.browser.quit()
 
+  def check_for_row_in_game_table(self, row_text):
+    table = self.browser.find_element_by_id("id_game_table")
+    rows  = table.find_elements_by_tag_name("tr")
+    self.assertIn(row_text, [row.text for row in rows],
+      f"New game does not appear in table. Contents were:\n{table.text}" )
+
 
   def test_starts_game_and_retrieves_later(self):
     # Ana quiere entrar a la página del squash. 
@@ -33,12 +39,8 @@ class NewVisitorTest(unittest.TestCase):
     # Al darle enter se queda guardado el juego.
     inputbox.send_keys(Keys.ENTER)
     time.sleep(1)
-
-    table = self.browser.find_element_by_id("id_game_table")
-    rows = table.find_elements_by_tag_name("tr")
-    self.assertIn("1: 6-11 : Pablo", [row.text for row in rows],
-      f"New game does not appear in table. Contents were:\n{table.text}" )
-
+    self.check_for_row_in_game_table("1: 6-11 : Pablo")
+    
     # Todavía hay un cuadro para ingresar más juegos. 
     # Ingresa un juego contra Paulina. Gana 11-8
     inputbox = self.browser.find_element_by_id("id_new_game")
@@ -47,11 +49,8 @@ class NewVisitorTest(unittest.TestCase):
     time.sleep(1)
 
     # La página se actualiza. Se ven los dos juegos. 
-    table = self.browser.find_element_by_id("id_game_table")
-    rows = table.find_elements_by_tag_name("tr")
-    self.assertIn("1: 6-11 : Pablo", [row.text for row in rows],
-      f"New game does not appear in table. Contents were:\n{table.text}" )
-    self.assertIn("2: 11-8 : Paulina", [row.text for row in rows])
+    self.check_for_row_in_game_table("1: 6-11 : Pablo")
+    self.check_for_row_in_game_table("2: 11-8 : Paulina")
 
     # Se pregunta si el sitio recuerda los juegos.  Encuentra el URL. 
 
