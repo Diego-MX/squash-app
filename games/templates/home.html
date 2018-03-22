@@ -8,12 +8,16 @@
   <h1>Games played</h1>
   <form method="POST">
     <input name="game_text" id="id_new_game" 
-        placeholder="Enter a game as:  'Score; AgainstPlayer'" />
+        placeholder="Enter a game as:  'Score : AgainstPlayer'" />
     {% csrf_token %}
   </form>
     
   <table id="id_game_table">
-    <tr><td>1: {{ new_game_text }} </td></tr>
+    {% for a_game in games %}
+      <tr><td>
+        {{ forloop.counter }}: {{ a_game.text }} 
+      </td></tr>
+    {% endfor%}
   </table>>
 </body>
 

@@ -31,7 +31,7 @@ class NewVisitorTest(unittest.TestCase):
     # Hay un recuadro para ingresar juegos. 
     inputbox = self.browser.find_element_by_id("id_new_game") 
     self.assertEqual(inputbox.get_attribute("placeholder"), 
-        "Enter a game as:  'Score; AgainstPlayer'")
+        "Enter a game as:  'Score : AgainstPlayer'")
 
     # Ana ingresa su primer juego contra Pablo. Pierde 6-11  
     inputbox.send_keys("6-11 : Pablo")

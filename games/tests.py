@@ -29,16 +29,41 @@ class HomePageTest(TestCase):
     # self.assertEqual(html, expected_html) 
 
 
-  def test_can_save_POST_request(self):
+  def test_saves_POST_request(self):
     response = self.client.post("/", 
-        data={"game_text": "A new game" } )
-    self.assertIn("A new game", response.content.decode())
-    self.assertTemplateUsed(response, "home.html")
+        data={"game_text": "A new game"} )
+    self.assertEqual(Game.objects.count(), 1)
+    new_game = Game.objects.first()
+    self.assertEqual(new_game.text, "A new game")
+
+    # self.assertIn("A new game", response.content.decode())
+    # self.assertTemplateUsed(response, "home.html")
+
+  def test_redirects_after_POST(self):
+    response = self.client.post("/", 
+        data={"game_text": "A new game"})
+    self.assertEqual(response.status_code, 302)
+    self.assertEqual(response["location"], "/")
+
+
+  def test_only_saves_games_when_necessary(self):
+    self.client.get("/")
+    self.assertEqual(Game.objects.count(), 0)
+
+  
+  def test_displays_all_list_games(self):
+    Game.objects.create(text="gamey 1")
+    Game.objects.create(text="gamey 2")
+    response = self.client.get("/")
+
+    self.assertIn("gamey 1", response.content.decode())
+    self.assertIn("gamey 2", response.content.decode())
+
 
 
 class GameModelTest(TestCase):
 
-  def test_saving_retrieving_games(self):
+  def test_saves_retrieves_games(self):
     first_game = Game()
     first_game.text = "a_score : a_player"
     # first_game.player1 = "a_player"
