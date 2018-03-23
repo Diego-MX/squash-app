@@ -7,9 +7,11 @@
 <body>
   <h1>New player</h1>
   <form method="POST" action="/players/new">
-    <input name="game_text" id="id_new_game" 
-        placeholder="Enter game as: 'Score : AgainstPlayer'" /> 
-    {% csrf_token %}
+    <p style="text-align: center;">
+      <input name="game_text" id="id_new_game" 
+          placeholder="Enter game as: 'Score : AgainstPlayer'"/> 
+          {% csrf_token %}
+    </p>
   </form>
   
 </body>
