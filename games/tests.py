@@ -11,9 +11,9 @@ from games.models import Game
 class HomePageTest(TestCase):
 
 
-  def test_root_url_resolve_to_home_page_view(self):
-    found = resolve("/")
-    self.assertEqual(found.func, home_page)
+  # def test_root_url_resolve_to_home_page_view(self):
+  #   found = resolve("/")
+  #   self.assertEqual(found.func, home_page)
 
 
   def test_uses_home_template(self):

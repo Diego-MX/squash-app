@@ -9,6 +9,7 @@ import time
 
 MAX_WAIT = 10
 
+
 # class NewVisitorTest(unittest.TestCase): 
 class NewVisitorTest(LiveServerTestCase):
 
@@ -73,10 +74,50 @@ class NewVisitorTest(LiveServerTestCase):
     self.wait_for_row_in_game_table("1: 6-11 : Pablo")
     self.wait_for_row_in_game_table("2: 11-8 : Paulina")
 
-    # Se pregunta si el sitio recuerda los juegos.  Encuentra el URL. 
+    # Sólo faltó:  Visita el URL y sigue viendo los juegos. 
 
-    # Visita el URL y sigue viendo los juegos. 
+    # Satisfecha se va a dormir. 
 
-    self.fail("Finish the test!")
 
+  def test_multiple_players_different_games(self):
+    # Ana hace su lista de juegos habitual. 
+    self.browser.get(self.live_server_url)
+    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox.send_keys("6-11 : Pablo")
+    inputbox.send_keys(Keys.ENTER)
+    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
   
+    # Se pregunta si el sitio recuerda los juegos.  Encuentra el URL y se va a cenar. 
+    url_juegos_ana = self.browser.current_url
+    self.assertRegex(url_juegos_ana, "/players/.+")
+    self.browser.quit()
+    ## Salimos del broser para borrar cualquier cookie de la sesión anterior. 
+
+    # Llega Bernardo a la página y no ve señal de juegos de Ana. 
+    self.browser = webdriver.Firefox()
+    self.broswer.get(self.live_server_url)
+    page_text = self.browser.find_element_by_tag_name("body").text
+    self.assertNotIn("6-11 : Pablo", page_text)
+    self.assertNotIn("11-8 : Paulina", page_text)
+
+    # Bernardo ingresa sus propios juegos.
+    inputbox = self.broser.find_element_by_id("id_new_game")
+    inputbox.send_keys("11-3 : Coach")
+    inputbox.send_keys(Keys.ENTER)
+    self.wait_for_row_in_game_table("1: 11-3 : Coach")
+
+    # Bernardo tiene su propio URL diferente de Ana. 
+    url_juegos_bernardo = self.browser.current_url
+    self.assertRegex(url_juegos_bernardo, "/games/.+")
+    self.assertNotEqual(url_juegos_bernardo, url_juegos_ana)
+
+    # De nuevo, ningún rastro de los juegos de Ana. 
+    page_text = self.browser.find_element_by_tag_name("body").text
+    self.assertNotIn("6-11 : Pablo", page_text)
+    self.assertIn("11-3 : Coach", page_text)
+
+    # Satisfechos se van a dormir. 
+    
+
+    
+

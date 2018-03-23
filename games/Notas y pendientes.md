@@ -5,8 +5,15 @@
 
 + ~~Display many games in table.~~
 
++ ~~Clean up database for functional tests.~~ 
+
++ ~~Remove time sleeps. ~~
+
 + Make several lists of games (for each player).
 
-+ Clean up database for functional tests. 
++ Adjust model to associate games with each player. 
 
-+ Remove time sleeps. 
++ Add unique URL for each list of games. 
+
++ Add URL for new game-list via POST, and new game to gamelist. 
+
