@@ -5,7 +5,7 @@ class Player(models.Model):
   objects = models.Manager()
   name    = models.TextField(default="")
   
-
+  
 class Game(models.Model):
   objects = models.Manager()
   player = models.ForeignKey(Player, default=None)

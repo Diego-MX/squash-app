@@ -38,7 +38,7 @@ class NewVisitorTest(LiveServerTestCase):
           raise err
         time.sleep(0.5)
 
-  def test_starts_game_and_retrieves_later(self):
+  def test_games_for_one_player(self):
     # Ana quiere entrar a la página del squash.
     # self.browser.get("http://localhost:8000")
     self.browser.get(self.live_server_url) 
@@ -109,7 +109,7 @@ class NewVisitorTest(LiveServerTestCase):
 
     # Bernardo tiene su propio URL diferente de Ana. 
     url_juegos_bernardo = self.browser.current_url
-    self.assertRegex(url_juegos_bernardo, "/games/.+")
+    self.assertRegex(url_juegos_bernardo, "/players/.+")
     self.assertNotEqual(url_juegos_bernardo, url_juegos_ana)
 
     # De nuevo, ningún rastro de los juegos de Ana. 

@@ -21,6 +21,7 @@ from games import views
 urlpatterns = [
     url(r'^$', views.home_page, name="home"),
     url(r"^players/new$", views.new_player, name="new_player"),
-    url(r"^players/first-player/$", views.view_player, name="view_player"),
+    url(r"^players/(\d+)/$", views.view_player, name="view_player"),
+    url(r"^players/(\d+)/add_game$", views.add_game, name="add_game"),
     # url(r'^admin/', admin.site.urls),
 ]

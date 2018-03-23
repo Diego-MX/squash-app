@@ -9,13 +9,13 @@
 
 + ~~Remove time sleeps. ~~
 
-+ Make several lists of games (for each player).
++ ~~Adjust model to associate games with each player.~~ 
 
-+ Adjust model to associate games with each player. 
-
-+ Add unique URL for each list of games. 
++ ~~Add unique URL for each list of games.~~
 
 + ~~Add URL for new game-list via POST~~, and new game to gamelist.
+
++ Factorizar URL's que son parecidos. 
 
 
 
