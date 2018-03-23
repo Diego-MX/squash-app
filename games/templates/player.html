@@ -9,7 +9,7 @@ Games played
 {% endblock%}
 
 {% block table %}
-<table id="id_game_table">
+<table id="id_game_table" class="table">
   {% for a_game in player.game_set.all %}
     <tr><td>{{ forloop.counter }}: {{ a_game.text }}</td></tr>
   {% endfor %}
