@@ -1,8 +1,12 @@
 
-1. ~Home page request saves empty games.~
++ ~~Home page request saves empty games.~~
 
-2. ~Code smell:  POST test is too long.~ 
++ ~~Code smell:  POST test is too long.~~
 
-3. Display many games in table. 
++ ~~Display many games in table.~~
 
-4. Make several lists of games (for each player).
++ Make several lists of games (for each player).
+
++ Clean up database for functional tests. 
+
++ Remove time sleeps. 

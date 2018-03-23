@@ -1,10 +1,13 @@
+from django.test import LiveServerTestCase
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 import unittest
 import time
 
-class NewVisitorTest(unittest.TestCase): 
+# class NewVisitorTest(unittest.TestCase): 
+class NewVisitorTest(LiveServerTestCase):
 
   def setUp(self): 
     self.browser = webdriver.Firefox()
@@ -20,8 +23,10 @@ class NewVisitorTest(unittest.TestCase):
 
 
   def test_starts_game_and_retrieves_later(self):
-    # Ana quiere entrar a la página del squash. 
-    self.browser.get("http://localhost:8000")
+    # Ana quiere entrar a la página del squash.
+    # self.browser.get("http://localhost:8000")
+    self.browser.get(self.live_server_url) 
+    
 
     # Ana verifica que el título y el header digan Juegos. 
     self.assertIn("Games played", self.browser.title)
