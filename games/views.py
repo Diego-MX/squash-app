@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 
-from games.models import Game
+from games.models import Game, Player
 
 # Create your views here.
 
@@ -11,7 +11,8 @@ def home_page(request):
 
  
 def new_player(request):
-  Game.objects.create(text=request.POST["game_text"])
+  player_ = Player.objects.create(name="player")
+  Game.objects.create(text=request.POST["game_text"], player=player_)
   response = redirect("/players/first-player/")
   return response
   

@@ -15,5 +15,7 @@
 
 + Add unique URL for each list of games. 
 
-+ Add URL for new game-list via POST, and new game to gamelist. 
++ ~~Add URL for new game-list via POST~~, and new game to gamelist.
+
+
 

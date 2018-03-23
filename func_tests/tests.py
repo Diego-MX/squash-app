@@ -48,6 +48,11 @@ class NewVisitorTest(LiveServerTestCase):
     header_text = self.browser.find_element_by_tag_name("h1").text
     self.assertIn("New player", header_text)    
 
+    ## Recuadros para: tu nombre, el juego.  Submit. 
+    # playerinput = self.browser.find_element_by_id("id_new_player")
+    # self.assertEqual(playerinput.get_attribute("placeholder"), 
+    #     "Your name?")
+
     # Hay un recuadro para ingresar juegos. 
     inputbox = self.browser.find_element_by_id("id_new_game") 
     self.assertEqual(inputbox.get_attribute("placeholder"), 
