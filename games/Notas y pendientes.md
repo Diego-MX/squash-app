@@ -5,6 +5,13 @@
 + Split game text into fields. 
 + Understand extra views to add (Player|Game).
 
+### Referencias y documentaciones. 
++ Bootstrap. 
++ Tutorial Django. 
++ Rellenar de la primera parte. 
+
+
+
 ## Notes from Book
 
 ### Part I
