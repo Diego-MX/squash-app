@@ -38,7 +38,6 @@ class NewVisitorTest(LiveServerTestCase):
           raise err
         time.sleep(0.5)
 
-
   def test_starts_game_and_retrieves_later(self):
     # Ana quiere entrar a la página del squash.
     # self.browser.get("http://localhost:8000")
@@ -47,7 +46,7 @@ class NewVisitorTest(LiveServerTestCase):
     # Ana verifica que el título y el header digan Juegos. 
     self.assertIn("Games played", self.browser.title)
     header_text = self.browser.find_element_by_tag_name("h1").text
-    self.assertIn("Record your first game", header_text)    
+    self.assertIn("New player", header_text)    
 
     # Hay un recuadro para ingresar juegos. 
     inputbox = self.browser.find_element_by_id("id_new_game") 

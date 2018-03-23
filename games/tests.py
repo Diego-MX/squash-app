@@ -35,25 +35,9 @@ class HomePageTest(TestCase):
   #   self.assertIn("gamey 2", response.content.decode())
 
 
-  def test_saves_POST_request(self):
-    self.client.post("/", data={"game_text": "A new game"} )
-    self.assertEqual(Game.objects.count(), 1)
-    new_game = Game.objects.first()
-    self.assertEqual(new_game.text, "A new game")
-
-    # self.assertIn("A new game", response.content.decode())
-    # self.assertTemplateUsed(response, "home.html")
-
-  def test_redirects_after_POST(self):
-    response = self.client.post("/", 
-        data={"game_text": "A new game"})
-    self.assertEqual(response.status_code, 302)
-    self.assertEqual(response["location"], "/players/first-player/")
-
-
-  def test_only_saves_games_when_necessary(self):
-    self.client.get("/")
-    self.assertEqual(Game.objects.count(), 0)
+  # def test_only_saves_games_when_necessary(self):
+  #   self.client.get("/")
+  #   self.assertEqual(Game.objects.count(), 0)
 
   
 class GameModelTest(TestCase):
@@ -84,7 +68,7 @@ class GameModelTest(TestCase):
     self.assertEqual(second_saved_game.text, "b_score : b_player")
 
 
-class ListViewTest(TestCase):
+class PlayerViewTest(TestCase):
 
   def test_uses_players_template(self):
     response = self.client.get("/players/first-player/")
@@ -99,6 +83,24 @@ class ListViewTest(TestCase):
 
     self.assertContains(response, "gamey 1")
     self.assertContains(response, "gamey 2")
+
+
+class NewPlayerTest(TestCase):
+  
+  def test_saves_POST_request(self):
+    self.client.post("/players/new", data={"game_text": "A new game"} )
+    self.assertEqual(Game.objects.count(), 1)
+    new_game = Game.objects.first()
+    self.assertEqual(new_game.text, "A new game")
+
+    # self.assertIn("A new game", response.content.decode())
+    # self.assertTemplateUsed(response, "home.html")
+
+  def test_redirects_after_POST(self):
+    response = self.client.post("/players/new", 
+        data={"game_text": "A new game"})
+    self.assertRedirects(response, "/players/first-player/")
+
 
 
 
