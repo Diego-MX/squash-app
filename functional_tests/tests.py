@@ -2,9 +2,12 @@ from django.test import LiveServerTestCase
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import WebDriverException
 
 import unittest
 import time
+
+MAX_WAIT = 10
 
 # class NewVisitorTest(unittest.TestCase): 
 class NewVisitorTest(LiveServerTestCase):
@@ -20,6 +23,21 @@ class NewVisitorTest(LiveServerTestCase):
     rows  = table.find_elements_by_tag_name("tr")
     self.assertIn(row_text, [row.text for row in rows],
       f"New game does not appear in table. Contents were:\n{table.text}" )
+
+  def wait_for_row_in_game_table(self, row_text):
+    start_time = time.time()
+    while True:
+      try: 
+        table = self.browser.find_element_by_id("id_game_table")
+        rows = table.find_elements_by_tag_name("tr")
+        self.assertIn(row_text, [a_row.text for a_row in rows])
+        return
+      except (AssertionError, WebDriverException) as err:
+        if time.time() - start_time > MAX_WAIT:
+          raise err
+        time.sleep(0.5)
+
+
 
 
   def test_starts_game_and_retrieves_later(self):
@@ -43,19 +61,17 @@ class NewVisitorTest(LiveServerTestCase):
 
     # Al darle enter se queda guardado el juego.
     inputbox.send_keys(Keys.ENTER)
-    time.sleep(1)
-    self.check_for_row_in_game_table("1: 6-11 : Pablo")
+    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
     
     # Todavía hay un cuadro para ingresar más juegos. 
     # Ingresa un juego contra Paulina. Gana 11-8
     inputbox = self.browser.find_element_by_id("id_new_game")
     inputbox.send_keys("11-8 : Paulina")
     inputbox.send_keys(Keys.ENTER)
-    time.sleep(1)
-
+    
     # La página se actualiza. Se ven los dos juegos. 
-    self.check_for_row_in_game_table("1: 6-11 : Pablo")
-    self.check_for_row_in_game_table("2: 11-8 : Paulina")
+    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
+    self.wait_for_row_in_game_table("2: 11-8 : Paulina")
 
     # Se pregunta si el sitio recuerda los juegos.  Encuentra el URL. 
 
@@ -64,8 +80,3 @@ class NewVisitorTest(LiveServerTestCase):
     self.fail("Finish the test!")
 
   
-
-if __name__ == "__main__":
-  unittest.main(warnings="ignore")
-
-
