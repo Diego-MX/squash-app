@@ -1,7 +1,7 @@
 db.sqlite3
 geckodriver.log
 virtualenv
-tmux*
+setup_squash.sh
 
 __pycache__
 *.pycache

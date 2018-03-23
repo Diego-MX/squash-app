@@ -39,23 +39,20 @@ class NewVisitorTest(LiveServerTestCase):
         time.sleep(0.5)
 
 
-
-
   def test_starts_game_and_retrieves_later(self):
     # Ana quiere entrar a la página del squash.
     # self.browser.get("http://localhost:8000")
     self.browser.get(self.live_server_url) 
     
-
     # Ana verifica que el título y el header digan Juegos. 
     self.assertIn("Games played", self.browser.title)
     header_text = self.browser.find_element_by_tag_name("h1").text
-    self.assertIn("Games played", header_text)    
+    self.assertIn("Record your first game", header_text)    
 
     # Hay un recuadro para ingresar juegos. 
     inputbox = self.browser.find_element_by_id("id_new_game") 
     self.assertEqual(inputbox.get_attribute("placeholder"), 
-        "Enter a game as:  'Score : AgainstPlayer'")
+        "Enter game as: 'Score : AgainstPlayer'")
 
     # Ana ingresa su primer juego contra Pablo. Pierde 6-11  
     inputbox.send_keys("6-11 : Pablo")
@@ -80,28 +77,28 @@ class NewVisitorTest(LiveServerTestCase):
 
 
   def test_multiple_players_different_games(self):
-    # Ana hace su lista de juegos habitual. 
+    # Ana makes the usual games list. 
     self.browser.get(self.live_server_url)
     inputbox = self.browser.find_element_by_id("id_new_game")
     inputbox.send_keys("6-11 : Pablo")
     inputbox.send_keys(Keys.ENTER)
     self.wait_for_row_in_game_table("1: 6-11 : Pablo")
   
-    # Se pregunta si el sitio recuerda los juegos.  Encuentra el URL y se va a cenar. 
+    # She asks herself if the site remembers previous games. Finds the URL and goes to dinner. 
     url_juegos_ana = self.browser.current_url
     self.assertRegex(url_juegos_ana, "/players/.+")
     self.browser.quit()
-    ## Salimos del broser para borrar cualquier cookie de la sesión anterior. 
+    ## Quit browser to erase cookies from previoues session.
 
-    # Llega Bernardo a la página y no ve señal de juegos de Ana. 
+    # Bernardo gets to the site and sees no sign of Ana's games. 
     self.browser = webdriver.Firefox()
-    self.broswer.get(self.live_server_url)
+    self.browser.get(self.live_server_url)
     page_text = self.browser.find_element_by_tag_name("body").text
     self.assertNotIn("6-11 : Pablo", page_text)
     self.assertNotIn("11-8 : Paulina", page_text)
 
-    # Bernardo ingresa sus propios juegos.
-    inputbox = self.broser.find_element_by_id("id_new_game")
+    # Bernardo enters his own games. 
+    inputbox = self.browser.find_element_by_id("id_new_game")
     inputbox.send_keys("11-3 : Coach")
     inputbox.send_keys(Keys.ENTER)
     self.wait_for_row_in_game_table("1: 11-3 : Coach")

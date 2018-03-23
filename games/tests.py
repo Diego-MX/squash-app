@@ -10,11 +10,9 @@ from games.models import Game
 
 class HomePageTest(TestCase):
 
-
   # def test_root_url_resolve_to_home_page_view(self):
   #   found = resolve("/")
   #   self.assertEqual(found.func, home_page)
-
 
   def test_uses_home_template(self):
     response = self.client.get("/")
@@ -29,9 +27,16 @@ class HomePageTest(TestCase):
     # self.assertEqual(html, expected_html) 
 
 
+  # def test_displays_all_list_games(self):
+  #   Game.objects.create(text="gamey 1")
+  #   Game.objects.create(text="gamey 2")
+  #   response = self.client.get("/")
+  #   self.assertIn("gamey 1", response.content.decode())
+  #   self.assertIn("gamey 2", response.content.decode())
+
+
   def test_saves_POST_request(self):
-    response = self.client.post("/", 
-        data={"game_text": "A new game"} )
+    self.client.post("/", data={"game_text": "A new game"} )
     self.assertEqual(Game.objects.count(), 1)
     new_game = Game.objects.first()
     self.assertEqual(new_game.text, "A new game")
@@ -43,7 +48,7 @@ class HomePageTest(TestCase):
     response = self.client.post("/", 
         data={"game_text": "A new game"})
     self.assertEqual(response.status_code, 302)
-    self.assertEqual(response["location"], "/")
+    self.assertEqual(response["location"], "/players/first-player/")
 
 
   def test_only_saves_games_when_necessary(self):
@@ -51,16 +56,6 @@ class HomePageTest(TestCase):
     self.assertEqual(Game.objects.count(), 0)
 
   
-  def test_displays_all_list_games(self):
-    Game.objects.create(text="gamey 1")
-    Game.objects.create(text="gamey 2")
-    response = self.client.get("/")
-
-    self.assertIn("gamey 1", response.content.decode())
-    self.assertIn("gamey 2", response.content.decode())
-
-
-
 class GameModelTest(TestCase):
 
   def test_saves_retrieves_games(self):
@@ -89,7 +84,21 @@ class GameModelTest(TestCase):
     self.assertEqual(second_saved_game.text, "b_score : b_player")
 
 
-    
+class ListViewTest(TestCase):
+
+  def test_uses_players_template(self):
+    response = self.client.get("/players/first-player/")
+    self.assertTemplateUsed(response, "player.html")
+  
+  
+  def test_displays_all_games(self):
+    Game.objects.create(text="gamey 1")
+    Game.objects.create(text="gamey 2")
+
+    response = self.client.get("/players/first-player/")
+
+    self.assertContains(response, "gamey 1")
+    self.assertContains(response, "gamey 2")
 
 
 
