@@ -1,12 +1,14 @@
 
 ## Mine Notes
 
++ Especificar los A-records para correr el Django en el servidor y así... 
+
 + Add player name to template. 
 + Split game text into fields. 
-+ Understand extra views to add (Player|Game).
++ ~~Understand extra views to add (Player|Game).~~
 
 ### Referencias y documentaciones. 
-+ Bootstrap. 
++ Bootstrap.  Smashing Magazine. 
 + Tutorial Django. 
 + Rellenar de la primera parte. 
 
