@@ -3,7 +3,8 @@ geckodriver.log
 virtualenv
 setup_squash.sh
 
+private_notes.md
 __pycache__
 *.pycache
 .vscode
-./static
+static
