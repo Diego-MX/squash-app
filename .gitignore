@@ -1,9 +1,10 @@
 db.sqlite3
 geckodriver.log
 virtualenv
-setup_squash.sh
 
 __pycache__
 *.pycache
 .vscode
+notes.md
 static
+.env
