@@ -22,8 +22,27 @@ class FunctionalTest(StaticLiveServerTestCase):
       # LIVE_SERVER_URL ya existe, pero se modifica. 
       self.live_server_url = "http://" + staging_server
 
+
   def tearDown(self):
     self.browser.quit()
+
+
+  def wait_for(self, a_func):
+    start_time = time.time()
+    while True:
+      try: 
+        return a_func
+      except (AssertionError, WebDriverException) as err:
+        if time.time() - start_time > MAX_WAIT:
+          raise err
+        time.sleep(0.5)
+
+
+  def check_for_row_in_game_table(self, row_text):
+    table = self.browser.find_element_by_id("id_game_table")
+    rows = table.find_elements_by_tag_name("tr")
+    self.assertIn(row_text, [a_row.text for a_row in rows])
+
 
   def wait_for_row_in_game_table(self, row_text):
     start_time = time.time()
@@ -37,5 +56,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         if time.time() - start_time > MAX_WAIT:
           raise err
         time.sleep(0.5)
+
+
 
 
