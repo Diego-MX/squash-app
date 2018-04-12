@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 
 from games.models import Game, Player
 
@@ -41,4 +42,9 @@ class GameAndPlayerModelTest(TestCase):
     self.assertEqual(second_saved_game.player, player_)
 
 
-
+  def test_cannot_save_empty_game(self):
+    a_player = Player.objects.create()
+    a_game = Game.objects.create(text="", player=a_player)
+    with self.assertRaises(ValidationError):
+      a_game.save()
+      a_game.full_clean()

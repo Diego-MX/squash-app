@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpRequest
+from django.utils.html import escape
 
 # from django.template.loader import render_to_string
 
@@ -85,6 +86,18 @@ class NewPlayerTest(TestCase):
         data={"game_text": "A new game"})
     new_player = Player.objects.first()
     self.assertRedirects(response, f"/players/{new_player.id}/")
+
+  def test_validation_errors_sent_back_to_homepage(self):
+    response = self.client.post("/players/new", data={"game_text": ""})
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed(response, "home.html")
+    expected_error = escape("You can't have an empty game.")
+    self.assertContains(response, expected_error)
+
+  def test_invalid_games_arent_saved(self):
+    self.client.post("/players/new", data={"game_text": ""})
+    self.assertEqual(Player.objects.count(), 0)
+    self.assertEqual(Game.objects.count(), 0)
 
 
 class NewGameTest(TestCase):

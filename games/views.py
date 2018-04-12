@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.core.exceptions import ValidationError
 
 from games.models import Game, Player
 
@@ -11,7 +12,15 @@ def home_page(request):
 
 def new_player(request):
   player_ = Player.objects.create()
-  Game.objects.create(text=request.POST["game_text"], player=player_)
+  game_ = Game.objects.create(text=request.POST["game_text"], player=player_)
+  try: 
+    game_.full_clean()
+    game_.save()
+  except ValidationError:
+    player_.delete()
+    error_ = "You can't have an empty game."
+    response = render(request, "home.html", {"error": error_})
+    return response
   response = redirect(f"/players/{player_.id}/")
   return response
    
