@@ -48,7 +48,16 @@ class PlayerViewTest(TestCase):
     self.assertTemplateUsed(response, "player.html")
   
   
-  def test_displays_all_games(self):
+  def test_passes_correct_player_to_template(self):
+    other_player = Player.objects.create()
+    this_player = Player.objects.create()
+    response = self.client.get(f"/players/{this_player.id}/")
+    self.assertEqual(response.context["player"], this_player)
+
+
+  # In Book there is TEST_DISPLAYS_ONLY_ITEMS_FOR_THAT_LIST. 
+  # Looks like a tricky name change. 
+  def test_displays_only_games_for_that_player(self):
     player_1 = Player.objects.create(name="playee")
     Game.objects.create(text="gamey 1", player=player_1)
     Game.objects.create(text="gamey 2", player=player_1)
@@ -63,11 +72,29 @@ class PlayerViewTest(TestCase):
     self.assertNotContains(response, "gamey 3")
     self.assertNotContains(response, "gamey 4")
 
-  def test_passes_correct_player_to_template(self):
+
+  def test_saves_POST_to_existing_player(self):
     other_player = Player.objects.create()
-    a_player = Player.objects.create()
-    response = self.client.get(f"/players/{a_player.id}/")
-    self.assertEqual(response.context["player"], a_player)
+    this_player  = Player.objects.create()
+
+    self.client.post(f"/players/{this_player.id}/", 
+        data={"game_text": "new game for this player"} )
+      
+    self.assertEqual(Game.objects.count(), 1)
+    new_game = Game.objects.first()
+    self.assertEqual(new_game.text, "new game for this player")
+    self.assertEqual(new_game.player, this_player)
+
+
+  def test_POST_redirects_to_player_view(self):
+    other_player = Player.objects.create()
+    this_player  = Player.objects.create()
+
+    response = self.client.post(f"/players/{this_player.id}/",
+        data={"game_text": "new game for this player"} )
+
+    self.assertRedirects(response, f"/players/{this_player.id}/")
+
 
 
 class NewPlayerTest(TestCase):
@@ -98,33 +125,6 @@ class NewPlayerTest(TestCase):
     self.client.post("/players/new", data={"game_text": ""})
     self.assertEqual(Player.objects.count(), 0)
     self.assertEqual(Game.objects.count(), 0)
-
-
-class NewGameTest(TestCase):
-
-  def test_saves_POST_to_existing_player(self):
-    other_player = Player.objects.create()
-    a_player = Player.objects.create()
-
-    self.client.post(f"/players/{a_player.id}/add_game", 
-        data={"game_text": "new game for this player"} )
-      
-    self.assertEqual(Game.objects.count(), 1)
-    new_game = Game.objects.first()
-    self.assertEqual(new_game.text, "new game for this player")
-    self.assertEqual(new_game.player, a_player)
-
-
-  def test_redirects_to_player_view(self):
-    other_player = Player.objects.create()
-    a_player     = Player.objects.create()
-
-    response = self.client.post(
-        f"/players/{a_player.id}/add_game", 
-        data={"game_text": "new game for this player"} )
-
-    self.assertRedirects(response, f"/players/{a_player.id}/")
-
 
 
 

@@ -21,18 +21,17 @@ def new_player(request):
     error_ = "You can't have an empty game."
     response = render(request, "home.html", {"error": error_})
     return response
+  
   response = redirect(f"/players/{player_.id}/")
   return response
    
 def view_player(request, player_id):
-  player_ = Player.objects.get(id=player_id)
-  response = render(request, "player.html", {"player": player_})
-  return response
-
-def add_game(request, player_id):
-  player_ = Player.objects.get(id=player_id)
-  Game.objects.create(text=request.POST["game_text"], player=player_)
-  response = redirect(f"/players/{player_.id}/")
+  player_  = Player.objects.get(id=player_id)
+  if request.method == "POST":
+    Game.objects.create(text=request.POST["game_text"], player = player_)
+    response = redirect(f"/players/{player_.id}/")
+  else: 
+    response = render(request, "player.html", {"player": player_})
   return response
 
 
