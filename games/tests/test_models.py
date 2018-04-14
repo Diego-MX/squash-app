@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.core.exceptions import ValidationError
 # from django.urls import resolve
 # from django.http import HttpRequest
 # from django.template.loader import render_to_string
@@ -45,4 +46,11 @@ class GameAndPlayerModelTest(TestCase):
     self.assertEqual(first_saved_game.player, player_)
     self.assertEqual(second_saved_game.player, player_)
 
+
+  def test_doesnt_save_empty_games(self):
+    player_ = Player.objects.create()
+    game_ = Game(player = player_, text = "")
+    with self.assertRaises(ValidationError):
+      game_.save()
+      game_.full_clean()
 

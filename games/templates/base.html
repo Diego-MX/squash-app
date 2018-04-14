@@ -24,6 +24,11 @@
           class="form-control input-lg"
           placeholder="Enter game as: 'Score : AgainstPlayer'" />
           {% csrf_token %}
+          {% if error %}
+            <div class="form-group has-error">
+              <span class="help-block">{{ error }}</span>
+            </div>
+          {% endif %}
     </form>
     {% block table %}
     {% endblock %}

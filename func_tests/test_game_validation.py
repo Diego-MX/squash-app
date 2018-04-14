@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from unittest import skip
 
 
-class ItemValidationTest(FunctionalTest):
+class GameValidationTest(FunctionalTest):
   def test_cannot_add_empty_games(self):
     # Ana goes to the home page and accidentally tries to submit a wrong game. 
     self.browser.get(self.live_server_url)
@@ -15,8 +15,7 @@ class ItemValidationTest(FunctionalTest):
     self.wait_for(lambda:
       self.assertEqual(
         self.browser.find_element_by_css_selector(".has-error").text,
-        "You can't have an empty game."
-    ))
+        "You can't have an empty game." ) )
 
     # She tries again with a new game text, which is correct now. 
     self.browser.find_element_by_id("id_new_game").send_keys("11-3 : Andrea")
