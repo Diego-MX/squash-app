@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpRequest
+from django.utils.html import escape
 # from django.template.loader import render_to_string
 
 from games.views import home_page
@@ -89,6 +90,25 @@ class PlayerViewTest(TestCase):
         data={"game_text": "new game for this player"} )
 
     self.assertRedirects(response, f"/players/{a_player.id}/")
+
+  def test_validation_errors_on_player_page(self):
+    player_ = Player.objects.create()
+    response = self.client.post(f"/players/{player_.id}/",
+      data={"game_text": ""})
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed(response, "player.html")
+    expected_error = escape("You can't have an empty game.")
+    self.assertContains(response, expected_error)
+
+  def test_invalid_games_for_existing_player_arent_saved(self):
+    player_ = Player.objects.create()
+    self.client.post(f'/players/{player_.id}/', 
+      data={'game_text': 'First'})
+    self.client.post(f'/players/{player_.id}/', 
+      data={'game_text': ''})
+    self.assertEqual(Game.objects.count(), 1)
+
+  
 
 
 class NewPlayerTest(TestCase):
