@@ -24,13 +24,13 @@ def new_player(request):
    
 def view_player(request, player_id):
   player_ = Player.objects.get(id=player_id)
-  response = render(request, "player.html", {"player": player_})
+  if request.method == "POST":
+    Game.objects.create(player = player_, text=request.POST["game_text"])
+    response = redirect(f"/players/{player_.id}/")
+  else: 
+    response = render(request, "player.html", {"player": player_})
   return response
 
-def add_game(request, player_id):
-  player_ = Player.objects.get(id=player_id)
-  Game.objects.create(text=request.POST["game_text"], player=player_)
-  response = redirect(f"/players/{player_.id}/")
-  return response
+
 
 

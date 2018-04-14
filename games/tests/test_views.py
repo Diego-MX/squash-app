@@ -1,7 +1,6 @@
 from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpRequest
-from django.utils.html import escape
 # from django.template.loader import render_to_string
 
 from games.views import home_page
@@ -48,8 +47,7 @@ class PlayerViewTest(TestCase):
     response = self.client.get(f"/players/{player_.id}/")
     self.assertTemplateUsed(response, "player.html")
   
-  
-  def test_displays_all_games(self):
+  def test_displays_games_for_player_only(self):
     player_1 = Player.objects.create(name="playee")
     Game.objects.create(text="gamey 1", player=player_1)
     Game.objects.create(text="gamey 2", player=player_1)
@@ -70,10 +68,27 @@ class PlayerViewTest(TestCase):
     response = self.client.get(f"/players/{a_player.id}/")
     self.assertEqual(response.context["player"], a_player)
 
-  def test_invalid_games_arent_saved(self):
-    self.client.post("/players/new", data={"game_text": ""})
-    self.assertEqual(Player.objects.count(), 0)
-    self.assertEqual(Game.objects.count(), 0)
+  def test_saves_POST_to_existing_player(self):
+    other_player = Player.objects.create()
+    a_player = Player.objects.create()
+
+    self.client.post(f"/players/{a_player.id}/", 
+        data={"game_text": "new game for this player"} )
+      
+    self.assertEqual(Game.objects.count(), 1)
+    new_game = Game.objects.first()
+    self.assertEqual(new_game.text, "new game for this player")
+    self.assertEqual(new_game.player, a_player)
+
+  def test_POST_redirects_to_player_view(self):
+    other_player = Player.objects.create()
+    a_player     = Player.objects.create()
+
+    response = self.client.post(
+        f"/players/{a_player.id}/", 
+        data={"game_text": "new game for this player"} )
+
+    self.assertRedirects(response, f"/players/{a_player.id}/")
 
 
 class NewPlayerTest(TestCase):
@@ -92,45 +107,3 @@ class NewPlayerTest(TestCase):
         data={"game_text": "A new game"})
     new_player = Player.objects.first()
     self.assertRedirects(response, f"/players/{new_player.id}/")
-
-  def test_validation_errors_sent_back_to_homepage_template(self):
-    response = self.client.post("/players/new", data={"game_text": ""})
-    self.assertEqual(response.status_code, 200)
-    self.assertTemplateUsed(response, "home.html")
-    expected_error = escape("You can't have an empty game.")
-    self.assertContains(response, expected_error)
-
-
-class NewGameTest(TestCase):
-
-  def test_saves_POST_to_existing_player(self):
-    other_player = Player.objects.create()
-    a_player = Player.objects.create()
-
-    self.client.post(f"/players/{a_player.id}/add_game", 
-        data={"game_text": "new game for this player"} )
-      
-    self.assertEqual(Game.objects.count(), 1)
-    new_game = Game.objects.first()
-    self.assertEqual(new_game.text, "new game for this player")
-    self.assertEqual(new_game.player, a_player)
-
-
-  def test_redirects_to_player_view(self):
-    other_player = Player.objects.create()
-    a_player     = Player.objects.create()
-
-    response = self.client.post(
-        f"/players/{a_player.id}/add_game", 
-        data={"game_text": "new game for this player"} )
-
-    self.assertRedirects(response, f"/players/{a_player.id}/")
-
-
-
-
-
-
-
-
-
