@@ -1,10 +1,14 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 
 # Create your models here.
 class Player(models.Model):
   objects = models.Manager()
   name    = models.TextField(default="")
-  
+
+  def get_absolute_url(self):
+    response = reverse("view_player", args=[self.id])
+    return response
   
 class Game(models.Model):
   objects = models.Manager()

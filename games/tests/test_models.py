@@ -54,3 +54,8 @@ class GameAndPlayerModelTest(TestCase):
       game_.save()
       game_.full_clean()
 
+
+  def test_get_absolute_url(self):
+    player_ = Player.objects.create()
+    self.assertEqual(player_.get_absolute_url(), f"/players/{player_.id}/")
+

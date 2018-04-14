@@ -15,7 +15,7 @@ def new_player(request):
   game_ = Game.objects.create(text=request.POST["game_text"], player=player_)
   try:
     game_.full_clean()
-    response = redirect(f"/players/{player_.id}/")
+    response = redirect(player_)
   except ValidationError:
     player_.delete()
     error_ = "You can't have an empty game."
@@ -32,7 +32,7 @@ def view_player(request, player_id):
       game_ = Game(player=player_, text=request.POST["game_text"])
       game_.full_clean()
       game_.save()
-      response = redirect(f"/players/{player_.id}/")
+      response = redirect(player_)
     except ValidationError:
       error_ = "You can't have an empty game."
       response = render(request, "player.html", 
