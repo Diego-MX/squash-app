@@ -1,5 +1,3 @@
-<html>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,14 +19,14 @@
     <h1>{% block header_text %}{% endblock %}</h1>
     <form method="POST" action="{% block form_action %}{% endblock%}">
       <input name="game_text" id="id_new_game"
-          class="form-control input-lg"
-          placeholder="Enter game as: 'Score : AgainstPlayer'" />
-          {% csrf_token %}
-          {% if error %}
-            <div class="form-group has-error">
-              <span class="help-block">{{ error }}</span>
-            </div>
-          {% endif %}
+            class="form-control input-lg"
+            placeholder="Enter game <SCORE : PLAYER_AGAINST>" />
+      {% csrf_token %}
+      {% if error %}
+        <div class="form-group has-error">
+          <span class="help-block">{{ error }}</span>
+        </div>
+      {% endif %}
     </form>
     {% block table %}
     {% endblock %}
