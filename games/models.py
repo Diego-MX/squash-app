@@ -7,7 +7,7 @@ class Player(models.Model):
   name    = models.TextField(default="")
 
   def get_absolute_url(self):
-    response = reverse("view_player", args=[self.id])
+    response = reverse("view_player", args=[self.id])  # pylint: disable=no-member 
     return response
   
 class Game(models.Model):

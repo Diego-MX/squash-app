@@ -11,33 +11,33 @@ class GameValidationTest(FunctionalTest):
     self.browser.get(self.live_server_url)
     self.get_game_input_box().send_keys(Keys.ENTER)
 
-    # Home Page Refreshes and there is an error message that verified the format. 
-    self.wait_for(lambda:
-      self.assertEqual(
-        self.browser.find_element_by_css_selector(".has-error").text,
-        "You can't have an empty game." ) )
+    # The browser intercepts the reques, and does not load the player page. 
+    self.wait_for(lambda: 
+      self.browser.find_element_by_css_selector("#id_text:invalid"))
 
-    # She tries again with a new game text, which is correct now. 
-    self.get_game_input_box().send_keys("11-3 : Andrea")
+    # She types text and error disappears. 
+    self.get_game_input_box().send_keys("11-4 : Vanesa")
+    self.wait_for(lambda: 
+      self.browser.find_element_by_css_selector("#id_text:valid"))
+
+    # And submits it successfully
     self.get_game_input_box().send_keys(Keys.ENTER)
     self.wait_for(lambda: 
-      self.check_for_row_in_game_table("1: 11-3 : Andrea") )
+      self.check_for_row_in_game_table("1: 11-4 : Vanesa") )
 
-    # Perversely, she now decides to submit a second wrong game. 
+    # Perversely, she now decides to submit a second wrong game
+    # Broser doesn't comply.
     self.get_game_input_box().send_keys(Keys.ENTER)
-
-    # She gets a similar warning on the page. 
-    self.wait_for(lambda:
-      self.assertEqual(
-        self.browser.find_element_by_css_selector(".has-error").text,
-        "You can't have an empty game."
-    ))
+    self.wait_for(lambda: 
+      self.browser.find_element_by_css_selector("#id_text:invalid"))
 
     # And she corrects it by filling ok game. 
     self.get_game_input_box().send_keys("2-11 : Diego")
+    self.wait_for(lambda: 
+      self.browser.find_element_by_css_selector("#id_text:valid"))
     self.get_game_input_box().send_keys(Keys.ENTER)
     self.wait_for(lambda: 
-      self.check_for_row_in_game_table("1: 11-3 : Andrea") )
+      self.check_for_row_in_game_table("1: 11-4 : Vanesa") )
     self.wait_for(lambda: 
       self.check_for_row_in_game_table("2: 2-11 : Diego") )
 

@@ -18,14 +18,14 @@
 
     <h1>{% block header_text %}{% endblock %}</h1>
     <form method="POST" action="{% block form_action %}{% endblock%}">
-      {{ form.text }}
-      <!-- <input name="game_text" id="id_new_game"
+      {{ form.text }} <!-- Instead of... 
+      <input name="game_text" id="id_new_game"
             class="form-control input-lg"
-            placeholder="Enter game <SCORE : PLAYER_AGAINST>" /> -->
+            placeholder="Enter game <SCORE : PLAYER_AGAINST>" />  -->
       {% csrf_token %}
-      {% if error %}
+      {% if form.errors %}
         <div class="form-group has-error">
-          <span class="help-block">{{ error }}</span>
+          <span class="help-block">{{ form.text.errors }}</span>
         </div>
       {% endif %}
     </form>

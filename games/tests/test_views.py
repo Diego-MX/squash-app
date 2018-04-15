@@ -5,7 +5,7 @@ from django.utils.html import escape
 # from django.template.loader import render_to_string
 
 from games.views import home_page
-from games.forms import GameForm
+from games.forms import GameForm, EMPTY_GAME_ERROR
 from games.models import Game, Player
 
 
@@ -47,7 +47,7 @@ class HomePageTest(TestCase):
   
 
 class PlayerViewTest(TestCase):
-
+  
   def test_uses_players_template(self):
     player_ = Player.objects.create(name="playee")
     response = self.client.get(f"/players/{player_.id}/")
@@ -89,20 +89,30 @@ class PlayerViewTest(TestCase):
   def test_POST_redirects_to_player_view(self):
     other_player = Player.objects.create()
     a_player     = Player.objects.create()
-
     response = self.client.post(
         f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
-
     self.assertRedirects(response, f"/players/{a_player.id}/")
+
+  def test_invalid_input_renders_home_template(self):
+    response = self.client.post("/players/new", data={"text": ""})
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed(response, "home.html")
+
+  def test_validation_errors_show_on_home_page(self):
+    response = self.client.post("/players/new", data={"text": ""})
+    self.assertContains(response, escape(EMPTY_GAME_ERROR))  
+
+  def test_invalid_input_passes_form_to_template(self):
+    response = self.client.post("/players/new", data={"text": ""})
+    self.assertIsInstance(response.context["form"], GameForm) 
 
   def test_validation_errors_on_player_page(self):
     player_ = Player.objects.create()
-    response = self.client.post(f"/players/{player_.id}/",
-      data={"text": ""})
+    response = self.client.post(f'/players/{player_.id}/', data={'text': ""})
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed(response, "player.html")
-    expected_error = escape("You can't have an empty game.")
+    expected_error = escape(EMPTY_GAME_ERROR)
     self.assertContains(response, expected_error)
 
   def test_invalid_games_for_existing_player_arent_saved(self):
@@ -113,7 +123,37 @@ class PlayerViewTest(TestCase):
       data={'text': ''})
     self.assertEqual(Game.objects.count(), 1)
 
-  
+  def test_displays_game_form(self):
+    player_ = Player.objects.create()
+    response = self.client.get(f'/players/{player_.id}/')
+    self.assertIsInstance(response.context['form'], GameForm)
+    self.assertContains(response, 'name="text"')
+
+
+
+  def post_invalid_input(self):
+    player_ = Player.objects.create()
+    response = self.client.post(f"/players/{player_.id}/", data={"text":""})
+    return response
+
+  def test_for_invalid_input_nothing_saved_to_db(self):
+    self.post_invalid_input()
+    self.assertEqual(Game.objects.count(), 0)
+
+  def test_for_invalid_input_renders_list_template(self):
+    response = self.post_invalid_input()
+    self.assertEqual(response.status_code, 200)
+    self.assertTemplateUsed(response, 'player.html')
+
+  def test_for_invalid_input_passes_form_to_template(self):
+      response = self.post_invalid_input()
+      self.assertIsInstance(response.context['form'], GameForm)
+
+  def test_for_invalid_input_shows_error_on_page(self):
+      response = self.post_invalid_input()
+      self.assertContains(response, escape(EMPTY_GAME_ERROR))
+
+
 
 class NewPlayerTest(TestCase):
   
