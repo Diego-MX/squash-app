@@ -79,7 +79,7 @@ class PlayerViewTest(TestCase):
     a_player = Player.objects.create()
 
     self.client.post(f"/players/{a_player.id}/", 
-        data={"game_text": "new game for this player"} )
+        data={"text": "new game for this player"} )
       
     self.assertEqual(Game.objects.count(), 1)
     new_game = Game.objects.first()
@@ -92,14 +92,14 @@ class PlayerViewTest(TestCase):
 
     response = self.client.post(
         f"/players/{a_player.id}/", 
-        data={"game_text": "new game for this player"} )
+        data={"text": "new game for this player"} )
 
     self.assertRedirects(response, f"/players/{a_player.id}/")
 
   def test_validation_errors_on_player_page(self):
     player_ = Player.objects.create()
     response = self.client.post(f"/players/{player_.id}/",
-      data={"game_text": ""})
+      data={"text": ""})
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed(response, "player.html")
     expected_error = escape("You can't have an empty game.")
@@ -108,16 +108,17 @@ class PlayerViewTest(TestCase):
   def test_invalid_games_for_existing_player_arent_saved(self):
     player_ = Player.objects.create()
     self.client.post(f'/players/{player_.id}/', 
-      data={'game_text': 'First'})
+      data={'text': 'First'})
     self.client.post(f'/players/{player_.id}/', 
-      data={'game_text': ''})
+      data={'text': ''})
     self.assertEqual(Game.objects.count(), 1)
 
   
+
 class NewPlayerTest(TestCase):
   
   def test_saves_POST_request(self):
-    self.client.post("/players/new", data={"game_text": "A new game"} )
+    self.client.post("/players/new", data={"text": "A new game"} )
     self.assertEqual(Game.objects.count(), 1)
     new_game = Game.objects.first()
     self.assertEqual(new_game.text, "A new game")
@@ -127,6 +128,6 @@ class NewPlayerTest(TestCase):
 
   def test_redirects_after_POST(self):
     response = self.client.post("/players/new", 
-        data={"game_text": "A new game"})
+        data={"text": "A new game"})
     new_player = Player.objects.first()
     self.assertRedirects(response, f"/players/{new_player.id}/")

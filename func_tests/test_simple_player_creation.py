@@ -22,7 +22,7 @@ class NewVisitorTest(FunctionalTest):
     #     "Your name?")
 
     # Hay un recuadro para ingresar juegos. 
-    inputbox = self.browser.find_element_by_id("id_new_game") 
+    inputbox = self.get_game_input_box() 
     self.assertEqual(inputbox.get_attribute("placeholder"), 
         "Enter game <SCORE : PLAYER_AGAINST>")
 
@@ -35,7 +35,7 @@ class NewVisitorTest(FunctionalTest):
     
     # Todavía hay un cuadro para ingresar más juegos. 
     # Ingresa un juego contra Paulina. Gana 11-8
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("11-8 : Paulina")
     inputbox.send_keys(Keys.ENTER)
     
@@ -51,7 +51,7 @@ class NewVisitorTest(FunctionalTest):
   def test_multiple_players_different_games(self):
     # Ana makes the usual games list. 
     self.browser.get(self.live_server_url)
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("6-11 : Pablo")
     inputbox.send_keys(Keys.ENTER)
     self.wait_for_row_in_game_table("1: 6-11 : Pablo")
@@ -70,7 +70,7 @@ class NewVisitorTest(FunctionalTest):
     self.assertNotIn("11-8 : Paulina", page_text)
 
     # Bernardo enters his own games. 
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("11-3 : Coach")
     inputbox.send_keys(Keys.ENTER)
     self.wait_for_row_in_game_table("1: 11-3 : Coach")

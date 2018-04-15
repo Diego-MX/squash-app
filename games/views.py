@@ -13,7 +13,7 @@ def home_page(request):
 
 def new_player(request):
   player_ = Player.objects.create()
-  game_ = Game.objects.create(text=request.POST["game_text"], player=player_)
+  game_ = Game.objects.create(text=request.POST["text"], player=player_)
   try:
     game_.full_clean()
     response = redirect(player_)
@@ -30,7 +30,7 @@ def view_player(request, player_id):
     response = render(request, "player.html", {"player": player_})
   else:
     try:
-      game_ = Game(player=player_, text=request.POST["game_text"])
+      game_ = Game(player=player_, text=request.POST["text"])
       game_.full_clean()
       game_.save()
       response = redirect(player_)
