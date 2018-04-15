@@ -5,6 +5,7 @@ from django.utils.html import escape
 # from django.template.loader import render_to_string
 
 from games.views import home_page
+from games.forms import GameForm
 from games.models import Game, Player
 
 
@@ -39,6 +40,10 @@ class HomePageTest(TestCase):
   #   self.client.get("/")
   #   self.assertEqual(Game.objects.count(), 0)
 
+
+  def test_home_page_uses_game_form(self):
+        response = self.client.get('/')
+        self.assertIsInstance(response.context['form'], GameForm)  
   
 
 class PlayerViewTest(TestCase):
@@ -109,8 +114,6 @@ class PlayerViewTest(TestCase):
     self.assertEqual(Game.objects.count(), 1)
 
   
-
-
 class NewPlayerTest(TestCase):
   
   def test_saves_POST_request(self):

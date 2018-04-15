@@ -18,9 +18,10 @@
 
     <h1>{% block header_text %}{% endblock %}</h1>
     <form method="POST" action="{% block form_action %}{% endblock%}">
-      <input name="game_text" id="id_new_game"
+      {{ form.text }}
+      <!-- <input name="game_text" id="id_new_game"
             class="form-control input-lg"
-            placeholder="Enter game <SCORE : PLAYER_AGAINST>" />
+            placeholder="Enter game <SCORE : PLAYER_AGAINST>" /> -->
       {% csrf_token %}
       {% if error %}
         <div class="form-group has-error">

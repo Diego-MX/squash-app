@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.exceptions import ValidationError
 
+from games.forms import GameForm
 from games.models import Game, Player
 
 # Create your views here.
 
 def home_page(request):
-  response = render(request, "home.html")
+  response = render(request, "home.html", {"form": GameForm()})
   return response
 
 def new_player(request):
