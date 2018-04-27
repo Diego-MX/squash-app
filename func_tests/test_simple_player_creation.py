@@ -22,26 +22,26 @@ class NewVisitorTest(FunctionalTest):
     #     "Your name?")
 
     # Hay un recuadro para ingresar juegos. 
-    inputbox = self.browser.find_element_by_id("id_new_game") 
+    inputbox = self.get_game_input_box() 
     self.assertEqual(inputbox.get_attribute("placeholder"), 
-        "Enter game as: 'Score : AgainstPlayer'")
+        "Enter game <SCORE : PLAYER_AGAINST>")
 
     # Ana ingresa su primer juego contra Pablo. Pierde 6-11  
     inputbox.send_keys("6-11 : Pablo")
 
     # Al darle enter se queda guardado el juego.
     inputbox.send_keys(Keys.ENTER)
-    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: 6-11 : Pablo"))
     
     # Todavía hay un cuadro para ingresar más juegos. 
     # Ingresa un juego contra Paulina. Gana 11-8
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("11-8 : Paulina")
     inputbox.send_keys(Keys.ENTER)
     
     # La página se actualiza. Se ven los dos juegos. 
-    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
-    self.wait_for_row_in_game_table("2: 11-8 : Paulina")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: 6-11 : Pablo"))
+    self.wait_for(lambda: self.check_for_row_in_game_table("2: 11-8 : Paulina"))
 
     # Sólo faltó:  Visita el URL y sigue viendo los juegos. 
 
@@ -51,10 +51,10 @@ class NewVisitorTest(FunctionalTest):
   def test_multiple_players_different_games(self):
     # Ana makes the usual games list. 
     self.browser.get(self.live_server_url)
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("6-11 : Pablo")
     inputbox.send_keys(Keys.ENTER)
-    self.wait_for_row_in_game_table("1: 6-11 : Pablo")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: 6-11 : Pablo"))
   
     # She asks herself if the site remembers previous games. Finds the URL and goes to dinner. 
     url_juegos_ana = self.browser.current_url
@@ -70,10 +70,10 @@ class NewVisitorTest(FunctionalTest):
     self.assertNotIn("11-8 : Paulina", page_text)
 
     # Bernardo enters his own games. 
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     inputbox.send_keys("11-3 : Coach")
     inputbox.send_keys(Keys.ENTER)
-    self.wait_for_row_in_game_table("1: 11-3 : Coach")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: 11-3 : Coach"))
 
     # Bernardo tiene su propio URL diferente de Ana. 
     url_juegos_bernardo = self.browser.current_url

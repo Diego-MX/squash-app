@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block form_action %}
-  /players/{{ player.id }}/
+  {% url "view_player" player.id %}
 {% endblock%}
 
 {% block table %}
   <table id="id_game_table" class="table">
-    {% for a_game in player.game_set.all  %}
+    {% for a_game in player.game_set.all %}
       <tr><td>{{ forloop.counter }}: {{ a_game.text }}</td></tr>
     {% endfor %}
   </table>

@@ -10,7 +10,7 @@ class LayoutAndStylingTest(FunctionalTest):
     self.browser.set_window_size(1024, 768)
 
     # She notices the input box is nicely centered
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    inputbox = self.get_game_input_box()
     self.assertAlmostEqual(
         inputbox.location["x"] + inputbox.size["width"]/2, 
         512, delta=10 )
@@ -18,8 +18,8 @@ class LayoutAndStylingTest(FunctionalTest):
     # She enters a new game and sees the input is centere there too
     inputbox.send_keys("test game")
     inputbox.send_keys(Keys.ENTER)
-    self.wait_for_row_in_game_table("1: test game")
-    inputbox = self.browser.find_element_by_id("id_new_game")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: test game"))
+    inputbox = self.get_game_input_box()
     self.assertAlmostEqual(
         inputbox.location["x"] + inputbox.size["width"]/2, 
         512, delta=10 )

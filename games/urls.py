@@ -14,12 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-
 from games import views
 
 urlpatterns = [
     url(r"^new$", views.new_player, name="new_player"),
     url(r"^(\d+)/$", views.view_player, name="view_player"),
-    # url(r"^(\d+)/add_game$", views.add_game, name="add_game"),
+    #url(r"^(\d+)/add_game$", views.add_game, name="add_game"),
     # url(r'^admin/', admin.site.urls),
 ]
