@@ -1,9 +1,5 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-<<<<<<< HEAD
-
-from games.models import Game, Player
-=======
 # from django.urls import resolve
 # from django.http import HttpRequest
 # from django.template.loader import render_to_string
@@ -11,7 +7,6 @@ from games.models import Game, Player
 from games.models import Game, Player
 # from games.views import home_page
 
->>>>>>> tmp
 
   
 class GameAndPlayerModelTest(TestCase):
@@ -20,26 +15,16 @@ class GameAndPlayerModelTest(TestCase):
     player_ = Player()
     player_.save()
     
-<<<<<<< HEAD
-    first_game = Game()
-    first_game.text = "a_score : a_player"
-    first_game.player = player_
-=======
     first_game = Game.objects.create(player=player_, text="a_score : a_player")
->>>>>>> tmp
     # first_game.player1 = "a_player"
     # first_game.player2 = "other_player"
     # first_game.score1  = 3
     # first_game.score2  = 1
     first_game.save()
 
-<<<<<<< HEAD
     second_game = Game()
     second_game.text = "b_score : b_player"
     second_game.player = player_
-=======
-    second_game = Game(player=player_, text="b_score : b_player")
->>>>>>> tmp
     # first_game.player1 = "a_player"
     # first_game.player2 = "yet_another_player"
     # first_game.score1  = 2
@@ -59,15 +44,6 @@ class GameAndPlayerModelTest(TestCase):
     self.assertEqual(first_saved_game.player, player_)
     self.assertEqual(second_saved_game.player, player_)
 
-<<<<<<< HEAD
-
-  def test_cannot_save_empty_game(self):
-    a_player = Player.objects.create()
-    a_game = Game.objects.create(text="", player=a_player)
-    with self.assertRaises(ValidationError):
-      a_game.save()
-      a_game.full_clean()
-=======
   def test_list_ordering(self):
     player_ = Player.objects.create()
     game1 = Game.objects.create(player=player_, text="a_score : a_player")
@@ -107,4 +83,3 @@ class GameAndPlayerModelTest(TestCase):
     player2 = Player.objects.create()
     game2 = Game.objects.create(player=player2, text="score: other_player")
     game2.full_clean()  # Should not raise.
->>>>>>> tmp

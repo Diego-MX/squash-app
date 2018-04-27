@@ -69,32 +69,9 @@ class PlayerViewTest(TestCase):
     self.assertNotContains(response, "gamey 3")
     self.assertNotContains(response, "gamey 4")
 
-
   def test_saves_POST_to_existing_player(self):
-    other_player = Player.objects.create()
-    this_player  = Player.objects.create()
-
-    self.client.post(f"/players/{this_player.id}/", 
-        data={"game_text": "new game for this player"} )
-      
-    self.assertEqual(Game.objects.count(), 1)
-    new_game = Game.objects.first()
-    self.assertEqual(new_game.text, "new game for this player")
-    self.assertEqual(new_game.player, this_player)
-
-
-  def test_POST_redirects_to_player_view(self):
-    other_player = Player.objects.create()
-    this_player  = Player.objects.create()
-
-    response = self.client.post(f"/players/{this_player.id}/",
-        data={"game_text": "new game for this player"} )
-
-    self.assertRedirects(response, f"/players/{this_player.id}/")
-
-
-  def test_saves_POST_to_existing_player(self):
-    other_player = Player.objects.create()
+    # pylint: disable=unused-argument
+    other_player = Player.objects.create()  
     a_player = Player.objects.create()
 
     self.client.post(f"/players/{a_player.id}/", 
@@ -105,15 +82,17 @@ class PlayerViewTest(TestCase):
     self.assertEqual(new_game.text, "new game for this player")
     self.assertEqual(new_game.player, a_player)
 
+
   def test_POST_redirects_to_player_view(self):
-    other_player = Player.objects.create()
+    # pylint: disable=unused-argument
+    other_player = Player.objects.create() 
     a_player     = Player.objects.create()
     response = self.client.post(
         f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
     self.assertRedirects(response, f"/players/{a_player.id}/")
 
-  def test_invalid_input_renders_home_template(self):
+  def test_invalid_input_renders_home_template(self): 
     response = self.client.post("/players/new", data={"text": ""})
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed(response, "home.html")
