@@ -9,53 +9,96 @@ from games.models import Game, Player
 
 
   
-class GameAndPlayerModelTest(TestCase):
+class GameModelTest(TestCase):
 
   def test_saves_retrieves_games(self):
-    player_ = Player()
-    player_.save()
+    a_player = Player()
+    a_player.save()
     
     first_game = Game()
     first_game.text = "a_score : a_player"
-    first_game.player = player_
-    # first_game.player1 = "a_player"
-    # first_game.player2 = "other_player"
-    # first_game.score1  = 3
-    # first_game.score2  = 1
+    first_game.player = a_player
     first_game.save()
 
     second_game = Game()
     second_game.text = "b_score : b_player"
-    second_game.player = player_
-    # first_game.player1 = "a_player"
-    # first_game.player2 = "yet_another_player"
-    # first_game.score1  = 2
-    # first_game.score2  = 3
+    second_game.player = a_player
     second_game.save()
 
     saved_player = Player.objects.first()
-    self.assertEqual(saved_player, player_)
+    self.assertEqual(saved_player, a_player)
 
     saved_games = Game.objects.all()
     self.assertEqual(saved_games.count(), 2)
 
     first_saved_game  = saved_games[0]
     second_saved_game = saved_games[1]
-    self.assertEqual(first_saved_game.text, "a_score : a_player")
+    self.assertEqual(first_saved_game.text,  "a_score : a_player")
     self.assertEqual(second_saved_game.text, "b_score : b_player")
-    self.assertEqual(first_saved_game.player, player_)
-    self.assertEqual(second_saved_game.player, player_)
+    self.assertEqual(first_saved_game.player, a_player)
+    self.assertEqual(second_saved_game.player, a_player)
+
+
+  def test_default_text(self):
+    a_game = Game()
+    self.assertEqual(a_game.text, '')
+
+
+  def test_game_is_related_to_player(self):
+    a_player = Player.objects.create()
+    a_game = Game()
+    a_game.player = a_player
+    a_game.save()
+    self.assertIn(a_game, a_player.game_set.all())
 
 
   def test_doesnt_save_empty_games(self):
-    player_ = Player.objects.create()
-    game_ = Game(player = player_, text = "")
+    a_player = Player.objects.create()
+    a_game = Game(player = a_player, text = "")
     with self.assertRaises(ValidationError):
-      game_.save()
-      game_.full_clean()
+      a_game.save()
+      a_game.full_clean()
 
+
+  def test_invalid_duplicate_games(self):
+    a_player = Player.objects.create()
+    Game.objects.create(player = a_player, text = "bla")
+    with self.assertRaises(ValidationError):
+      game = Game(player=a_player, text="bla")
+      game.full_clean()
+      # game.save()
+    
+  def test_allows_duplicate_games_different_players(self):
+    player_1 = Player.objects.create()
+    player_2 = Player.objects.create()
+    Game.objects.create(player = player_1, text = "bla")
+    game = Game(player = player_2, text = "bla")
+    game.full_clean()  # should not raise
+
+
+  def test_game_ordering(self):
+    player_1 = Player.objects.create()
+    game_1 = Game.objects.create(player=player_1, text='i1')
+    game_2 = Game.objects.create(player=player_1, text='item 2')
+    game_3 = Game.objects.create(player=player_1, text='3')
+    self.assertEqual(list( Game.objects.all() ), [game_1, game_2, game_3] )
+
+  def test_string_representation(self):
+    game = Game(text='some text')
+    self.assertEqual(str(game), 'some text')
+
+
+class PlayerModelTest(TestCase):
 
   def test_get_absolute_url(self):
-    player_ = Player.objects.create()
-    self.assertEqual(player_.get_absolute_url(), f"/players/{player_.id}/")
+    a_player = Player.objects.create()
+    self.assertEqual(a_player.get_absolute_url(), f"/players/{a_player.id}/")
+
+
+
+
+
+
+
+
 

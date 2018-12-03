@@ -2,10 +2,13 @@ from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpRequest
 from django.utils.html import escape
+
+from unittest import skip
 # from django.template.loader import render_to_string
 
 from games.views import home_page
-from games.forms import GameForm, EMPTY_GAME_ERROR
+from games.forms import (GameForm, ExistingGameForm, 
+        EMPTY_GAME_ERROR, DUPLICATE_GAME_ERROR)   
 from games.models import Game, Player
 
 
@@ -49,8 +52,8 @@ class HomePageTest(TestCase):
 class PlayerViewTest(TestCase):
   
   def test_uses_players_template(self):
-    player_ = Player.objects.create(name="playee")
-    response = self.client.get(f"/players/{player_.id}/")
+    a_player = Player.objects.create(name="playee")
+    response = self.client.get(f"/players/{a_player.id}/")
     self.assertTemplateUsed(response, "player.html")
   
   def test_displays_games_for_player_only(self):
@@ -69,15 +72,17 @@ class PlayerViewTest(TestCase):
     self.assertNotContains(response, "gamey 4")
 
   def test_passes_correct_player_to_template(self):
+    # pylint: disable=unused-variable
     other_player = Player.objects.create()
     a_player = Player.objects.create()
     response = self.client.get(f"/players/{a_player.id}/")
     self.assertEqual(response.context["player"], a_player)
 
   def test_saves_POST_to_existing_player(self):
+    # pylint: disable=unused-variable
     other_player = Player.objects.create()
+    
     a_player = Player.objects.create()
-
     self.client.post(f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
       
@@ -87,10 +92,10 @@ class PlayerViewTest(TestCase):
     self.assertEqual(new_game.player, a_player)
 
   def test_POST_redirects_to_player_view(self):
+    # pylint: disable=unused-variable
     other_player = Player.objects.create()
     a_player     = Player.objects.create()
-    response = self.client.post(
-        f"/players/{a_player.id}/", 
+    response = self.client.post(f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
     self.assertRedirects(response, f"/players/{a_player.id}/")
 
@@ -104,8 +109,8 @@ class PlayerViewTest(TestCase):
     self.assertContains(response, escape(EMPTY_GAME_ERROR))  
 
   def test_invalid_input_passes_form_to_template(self):
-    response = self.client.post("/players/new", data={"text": ""})
-    self.assertIsInstance(response.context["form"], GameForm) 
+    response = self.post_invalid_input()
+    self.assertIsInstance(response.context["form"], ExistingGameForm) 
 
   def test_validation_errors_on_player_page(self):
     player_ = Player.objects.create()
@@ -124,35 +129,41 @@ class PlayerViewTest(TestCase):
     self.assertEqual(Game.objects.count(), 1)
 
   def test_displays_game_form(self):
-    player_ = Player.objects.create()
-    response = self.client.get(f'/players/{player_.id}/')
-    self.assertIsInstance(response.context['form'], GameForm)
+    a_player = Player.objects.create()
+    response = self.client.get(f'/players/{a_player.id}/')
+    self.assertIsInstance(response.context['form'], ExistingGameForm)
     self.assertContains(response, 'name="text"')
 
 
 
   def post_invalid_input(self):
-    player_ = Player.objects.create()
-    response = self.client.post(f"/players/{player_.id}/", data={"text":""})
+    a_player = Player.objects.create()
+    response = self.client.post(f"/players/{a_player.id}/", data={"text":""})
     return response
 
   def test_for_invalid_input_nothing_saved_to_db(self):
     self.post_invalid_input()
     self.assertEqual(Game.objects.count(), 0)
 
-  def test_for_invalid_input_renders_list_template(self):
+  def test_for_invalid_input_renders_player_template(self):
     response = self.post_invalid_input()
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed(response, 'player.html')
 
-  def test_for_invalid_input_passes_form_to_template(self):
-      response = self.post_invalid_input()
-      self.assertIsInstance(response.context['form'], GameForm)
-
   def test_for_invalid_input_shows_error_on_page(self):
-      response = self.post_invalid_input()
-      self.assertContains(response, escape(EMPTY_GAME_ERROR))
+    response = self.post_invalid_input()
+    self.assertContains(response, escape(EMPTY_GAME_ERROR))
 
+  def test_duplicate_games_endup_on_players_page(self):
+    a_player = Player.objects.create()
+    # pylint: disable=unused-variable
+    game_1   = Game.objects.create(player=a_player, text='Some textey')
+    response = self.client.post(f'/players/{a_player.id}/',
+        data={'text': 'Some textey'} )
+    expected_error = escape(DUPLICATE_GAME_ERROR)
+    self.assertContains(response, expected_error)
+    self.assertTemplateUsed(response, 'player.html')
+    self.assertEqual(Game.objects.all().count(), 1)
 
 
 class NewPlayerTest(TestCase):

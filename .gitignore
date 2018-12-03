@@ -2,9 +2,10 @@ db.sqlite3
 geckodriver.log
 virtualenv
 
-__pycache__
+*__pycache__
 *.pycache
 .vscode
 notes.md
 static
 .env
+.idea
