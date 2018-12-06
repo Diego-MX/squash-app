@@ -10,6 +10,7 @@ from games.views import home_page
 from games.forms import (GameForm, ExistingGameForm, 
         EMPTY_GAME_ERROR, DUPLICATE_GAME_ERROR)   
 from games.models import Game, Player
+from games.views import home_page
 
 
 class HomePageTest(TestCase):
@@ -71,6 +72,7 @@ class PlayerViewTest(TestCase):
     self.assertNotContains(response, "gamey 3")
     self.assertNotContains(response, "gamey 4")
 
+<<<<<<< HEAD
   def test_passes_correct_player_to_template(self):
     # pylint: disable=unused-variable
     other_player = Player.objects.create()
@@ -82,6 +84,11 @@ class PlayerViewTest(TestCase):
     # pylint: disable=unused-variable
     other_player = Player.objects.create()
     
+=======
+  def test_saves_POST_to_existing_player(self):
+    # pylint: disable=unused-argument
+    other_player = Player.objects.create()  
+>>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
     a_player = Player.objects.create()
     self.client.post(f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
@@ -91,15 +98,21 @@ class PlayerViewTest(TestCase):
     self.assertEqual(new_game.text, "new game for this player")
     self.assertEqual(new_game.player, a_player)
 
+
   def test_POST_redirects_to_player_view(self):
+<<<<<<< HEAD
     # pylint: disable=unused-variable
     other_player = Player.objects.create()
+=======
+    # pylint: disable=unused-argument
+    other_player = Player.objects.create() 
+>>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
     a_player     = Player.objects.create()
     response = self.client.post(f"/players/{a_player.id}/", 
         data={"text": "new game for this player"} )
     self.assertRedirects(response, f"/players/{a_player.id}/")
 
-  def test_invalid_input_renders_home_template(self):
+  def test_invalid_input_renders_home_template(self): 
     response = self.client.post("/players/new", data={"text": ""})
     self.assertEqual(response.status_code, 200)
     self.assertTemplateUsed(response, "home.html")

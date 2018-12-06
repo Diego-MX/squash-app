@@ -15,9 +15,17 @@ class GameModelTest(TestCase):
     a_player = Player()
     a_player.save()
     
+<<<<<<< HEAD
     first_game = Game()
     first_game.text = "a_score : a_player"
     first_game.player = a_player
+=======
+    first_game = Game.objects.create(player=player_, text="a_score : a_player")
+    # first_game.player1 = "a_player"
+    # first_game.player2 = "other_player"
+    # first_game.score1  = 3
+    # first_game.score2  = 1
+>>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
     first_game.save()
 
     second_game = Game()
@@ -51,6 +59,17 @@ class GameModelTest(TestCase):
     a_game.save()
     self.assertIn(a_game, a_player.game_set.all())
 
+  def test_list_ordering(self):
+    player_ = Player.objects.create()
+    game1 = Game.objects.create(player=player_, text="a_score : a_player")
+    game2 = Game.objects.create(player=player_, text="b_score : b_player")
+    game3 = Game.objects.create(player=player_, text="c_score : c_player")
+    self.assertEqual( list(Game.objects.all()), [game1, game2, game3] )
+
+
+  def test_string_representation(self):
+    game = Game(text="a_score : a_player")
+    self.assertEqual(str(game), "a_score : a_player")
 
   def test_doesnt_save_empty_games(self):
     a_player = Player.objects.create()
@@ -102,3 +121,18 @@ class PlayerModelTest(TestCase):
 
 
 
+
+  def test_invalid_duplicate_games(self):
+    player_ = Player.objects.create()
+    Game.objects.create(player=player_, text="score: other_player")
+    with self.assertRaises(ValidationError):
+      game = Game.objects.create(player=player_, text="score: other_player")
+      game.full_clean()
+
+  
+  def test_saves_same_game_with_different_players(self):
+    player1 = Player.objects.create()
+    Game.objects.create(player=player1, text="score: other_player")
+    player2 = Player.objects.create()
+    game2 = Game.objects.create(player=player2, text="score: other_player")
+    game2.full_clean()  # Should not raise.

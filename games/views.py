@@ -8,7 +8,8 @@ from games.models import Game, Player
 # Create your views here.
 
 def home_page(request):
-  response = render(request, "home.html", {"form": GameForm()})
+  form_ = GameForm()
+  response = render(request, "home.html", {"form": form_})
   return response
 
 def new_player(request):

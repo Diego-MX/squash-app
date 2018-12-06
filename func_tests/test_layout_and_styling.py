@@ -18,7 +18,7 @@ class LayoutAndStylingTest(FunctionalTest):
     # She enters a new game and sees the input is centere there too
     inputbox.send_keys("test game")
     inputbox.send_keys(Keys.ENTER)
-    self.wait_for_row_in_game_table("1: test game")
+    self.wait_for(lambda: self.check_for_row_in_game_table("1: test game"))
     inputbox = self.get_game_input_box()
     self.assertAlmostEqual(
         inputbox.location["x"] + inputbox.size["width"]/2, 

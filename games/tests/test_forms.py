@@ -1,9 +1,14 @@
 from django.test import TestCase
 from django.utils.html import escape
 
+<<<<<<< HEAD
 from games.models import Game, Player
 from games.forms  import (GameForm, ExistingGameForm, 
       EMPTY_GAME_ERROR, DUPLICATE_GAME_ERROR)
+=======
+from games.forms import GameForm, EMPTY_GAME_ERROR
+from games.models import Player, Game
+>>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
 
 
 class GameFormTest(TestCase):
@@ -17,6 +22,7 @@ class GameFormTest(TestCase):
 
 
   def test_form_validation_for_blank_games(self):
+<<<<<<< HEAD
     a_form = GameForm(data={'text': ''})
     self.assertFalse(a_form.is_valid())
     self.assertEqual(a_form.errors['text'], [EMPTY_GAME_ERROR])
@@ -60,3 +66,17 @@ class ExistingGameFormTest(TestCase):
     self.assertEqual(new_game, Game.objects.all()[0])
 
 
+=======
+    form_ = GameForm(data={'text': ''})
+    self.assertFalse(form_.is_valid())
+    self.assertEqual(form_.errors['text'], [EMPTY_GAME_ERROR])
+
+
+  def test_form_save_handles_saving_to_a_list(self):
+    player_ = Player.objects.create()
+    form_ = GameForm(data={'text': 'Won : Toño'})
+    new_game = form_.save(for_player=player_)
+    self.assertEqual(new_game, Game.objects.first())
+    self.assertEqual(new_game.text, "Won : Toño")
+    self.assertEqual(new_game.player, player_)
+>>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
