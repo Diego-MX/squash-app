@@ -1,11 +1,16 @@
-db.sqlite3
-geckodriver.log
-virtualenv
-
+# Creados por otros programas.
 *__pycache__
 *.pycache
-.vscode
-notes.md
-static
+/.vscode
+/.idea
+
+# Herramientas para el proyecto
 .env
-.idea
+/static
+/virtualenv
+/db.sqlite3
+/geckodriver.log
+
+# Individuales
+/Notas y pendientes.md
+
