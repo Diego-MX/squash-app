@@ -15,17 +15,9 @@ class GameModelTest(TestCase):
     a_player = Player()
     a_player.save()
     
-<<<<<<< HEAD
     first_game = Game()
     first_game.text = "a_score : a_player"
     first_game.player = a_player
-=======
-    first_game = Game.objects.create(player=player_, text="a_score : a_player")
-    # first_game.player1 = "a_player"
-    # first_game.player2 = "other_player"
-    # first_game.score1  = 3
-    # first_game.score2  = 1
->>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
     first_game.save()
 
     second_game = Game()

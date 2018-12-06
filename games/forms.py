@@ -18,8 +18,7 @@ class GameForm(forms.models.ModelForm):
           'placeholder': "Enter game <SCORE : PLAYER_AGAINST>",
           'class': 'form-control input-lg', 
     }) }
-    error_messages = {
-<<<<<<< HEAD
+    error_messages = { 
         'text': {'required': EMPTY_GAME_ERROR}
     }
 
@@ -43,13 +42,5 @@ class ExistingGameForm(GameForm):
   def save(self):
     the_save = forms.models.ModelForm.save(self)
     return the_save
-=======
-      'text': {'required': EMPTY_GAME_ERROR}
-    }
-
-  def save(self, for_player):
-    self.instance.player = for_player   # pylint: disable=no-member 
-    return super().save()               # pylint: disable=no-member 
->>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
 
 
