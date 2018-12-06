@@ -51,23 +51,7 @@ class GameValidationTest(FunctionalTest):
     self.wait_for(lambda: 
       self.check_for_row_in_game_table("2: 2-11 : Diego") )
 
-  def test_cannot_add_duplicate_games(self):
-    # Ana logs in. 
-    self.browser.get(self.live_server_url)
-    self.get_game_input_box().send_keys("11-3 : Pablo")
-    self.get_game_input_box().send_keys(Keys.ENTER)
-    self.wait_for(lambda:
-      self.check_for_row_in_game_table("1: 11-3 : Pablo"))
-    
-    # She wants to duplicate item. 
-    self.get_game_input_box().send_keys("11-3 : Pablo")
-    self.get_game_input_box().send_keys(Keys.ENTER)
-    
-    # She sees a helpful message
-    self.wait_for(lambda: self.assertEqual(
-      self.get_error_element().text,
-      "You've saved this game already." ))
-
+  
 
   def test_error_messages_cleared_on_input(self):
     # Ana  guarda sus juegos y causa un error. 
@@ -89,18 +73,18 @@ class GameValidationTest(FunctionalTest):
     self.wait_for(lambda: self.assertFalse(
       self.get_error_element().is_displayed() ))
 
-
   def test_cannot_add_duplicate_games(self):
-    # Ana starts a new list. 
+    # Ana logs in. 
     self.browser.get(self.live_server_url)
-    self.get_game_input_box().send_keys("4-7 : Paulina")
+    self.get_game_input_box().send_keys("11-3 : Pablo")
     self.get_game_input_box().send_keys(Keys.ENTER)
-    self.wait_for(lambda: 
-      self.check_for_row_in_game_table("1: 4-7 : Paulina"))
+    self.wait_for(lambda:
+      self.check_for_row_in_game_table("1: 11-3 : Pablo"))
     
-    # She accidentally tries to enter a duplicate game. 
-    self.get_game_input_box().send_keys("4-7 : Paulina")
+    # She wants to duplicate item. 
+    self.get_game_input_box().send_keys("11-3 : Pablo")
     self.get_game_input_box().send_keys(Keys.ENTER)
+    
     self.wait_for(lambda: self.assertEqual(
       self.browser.find_element_by_css_selector(".has-error").text,
       "You've already entered this game."))

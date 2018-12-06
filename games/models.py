@@ -11,7 +11,6 @@ class Player(models.Model):
     return response
   
 class Game(models.Model):
-<<<<<<< HEAD
   objects = models.Manager()
   player  = models.ForeignKey(Player, default=None)
   text    = models.TextField(default="")
@@ -19,18 +18,6 @@ class Game(models.Model):
   class Meta:
     ordering = ('id', )
     unique_together = ('player', 'text')
-=======
-  player = models.ForeignKey(Player, default=None)
-  text   = models.TextField(default="", unique=True)
-  
-  objects = models.Manager()
-  class Meta:
-    ordering = ("id",)
-    unique_together = ("player", "text")
-
-  def __str__(self):
-    return self.text
->>>>>>> 0bae8bca594e839392beba506fead05c1955f41c
   # player1 = models.TextField(default="Player1")
   # player2 = models.TextField(default="Player2")
   # score1  = models.IntegerField(default=0)
