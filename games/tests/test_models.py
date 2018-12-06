@@ -58,11 +58,6 @@ class GameModelTest(TestCase):
     game3 = Game.objects.create(player=player_, text="c_score : c_player")
     self.assertEqual( list(Game.objects.all()), [game1, game2, game3] )
 
-
-  def test_string_representation(self):
-    game = Game(text="a_score : a_player")
-    self.assertEqual(str(game), "a_score : a_player")
-
   def test_doesnt_save_empty_games(self):
     a_player = Player.objects.create()
     a_game = Game(player = a_player, text = "")
@@ -98,6 +93,7 @@ class GameModelTest(TestCase):
     game = Game(text='some text')
     self.assertEqual(str(game), 'some text')
 
+  
 
 class PlayerModelTest(TestCase):
 
