@@ -24,15 +24,13 @@
 console.log("Qunit tests start.")
 
 QUnit.test("Errors are hidden on keypress.", function (assert) {
-  console.log("... in test 1");
-  initialize();
+  window.Squashing.initialize();
   $('input[name="text"]').trigger('keypress');
   assert.equal( $('.has-error').is(':visible'), false);
 });
 
 QUnit.test("Errors aren't hidden before keypress.", function (assert) {
-  console.log("... in test 2");
-  initialize();
+  window.Squashing.initialize();
   assert.equal( $('.has-error').is(':visible'), true);
 });
 

@@ -134,8 +134,6 @@ class PlayerViewTest(TestCase):
     self.assertIsInstance(response.context['form'], ExistingGameForm)
     self.assertContains(response, 'name="text"')
 
-
-
   def post_invalid_input(self):
     a_player = Player.objects.create()
     response = self.client.post(f"/players/{a_player.id}/", data={"text":""})
