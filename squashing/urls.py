@@ -17,14 +17,17 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from games import views as game_views
-from games import urls as player_urls
+from games import urls as players_urls
+from accounts import urls as accounts_urls
 
 
 urlpatterns = [
-    url(r'^$', game_views.home_page, name="home"),
-    url(r"^players/", include(player_urls))
-    # url(r"^players/new$", views.new_player, name="new_player"),
-    # url(r"^players/(\d+)/$", views.view_player, name="view_player"),
-    # url(r"^players/(\d+)/add_game$", views.add_game, name="add_game"),
-    # url(r'^admin/', admin.site.urls),
+	url(r'^$', game_views.home_page, name="home"),
+	url(r"^players/", include(players_urls)),
+	url(r"^players/", include(players_urls)),
+	url(r"^accounts/", include(accounts_urls)), 
+	# url(r"^players/new$", views.new_player, name="new_player"),
+	# url(r"^players/(\d+)/$", views.view_player, name="view_player"),
+	# url(r"^players/(\d+)/add_game$", views.add_game, name="add_game"),
+	# url(r'^admin/', admin.site.urls),
 ]

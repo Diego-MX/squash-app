@@ -87,5 +87,5 @@ class GameValidationTest(FunctionalTest):
     
     self.wait_for(lambda: self.assertEqual(
       self.browser.find_element_by_css_selector(".has-error").text,
-      "You've already entered this game."))
+      "You've saved this game already."))
     
