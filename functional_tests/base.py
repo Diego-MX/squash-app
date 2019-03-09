@@ -1,15 +1,12 @@
-#from django.test import LiveServerTestCase
+import os, time
+import unittest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import WebDriverException
-
 from unittest import skip
+from .server_tools import reset_database
 
-import os
-import unittest
-import time
 
 MAX_WAIT = 10
 
@@ -18,13 +15,13 @@ class FunctionalTest(StaticLiveServerTestCase):
 
   def setUp(self): 
     self.browser   = webdriver.Firefox()
-    staging_server = os.environ.get("STAGING_SERVER")  
-    if staging_server: 
-      self.live_server_url = "http://" + staging_server
+    self.staging_server = os.environ.get("STAGING_SERVER")  
+    if self.staging_server: 
+      self.live_server_url = "http://" + self.staging_server
+      reset_database(self.staging_server)
 
   def tearDown(self):
     self.browser.quit()
-
 
   def wait(a_function):
     def mod_function(*args, **kwargs):
